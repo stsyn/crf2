@@ -1,3 +1,3 @@
 # crf
 
-Copy SDL2 files from crfly directory
+Copy SDL2 files from crfly repository
