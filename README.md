@@ -6,3 +6,4 @@ Copy SDL2 files from crfly repository
 
 * Basic rendering function (all modes included)
 * More shaders stuff
+* Normal paths loading
