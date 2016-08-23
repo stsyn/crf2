@@ -53,8 +53,8 @@ void buildLayer(Layer& id,const int x,const int y)
 	
 	id.lcnv[0]=0;
 	id.lcnv[1]=0;
-	id.lcnv[2]=x;
-	id.lcnv[3]=y;
+	id.lcnv[2]=x-1;
+	id.lcnv[3]=y-1;
 	reset(id);
 }
 
@@ -86,15 +86,13 @@ unsigned int At(unsigned int color)
 {
 	return ((color >> 24) & 255);
 }
-unsigned int tA(unsigned int color, unsigned int a)
+unsigned int tA(unsigned int a)
 {
-	unsigned int tcolor = color & 0x00ffffff;
-	return (a << 24) | tcolor;
+	return (a << 24);
 }
-unsigned int tA(unsigned int color, int a)
+unsigned int tA(int a)
 {
-	unsigned int tcolor = color & 0x00ffffff;
-	return (a << 24) | tcolor;
+	return (a << 24);
 }
 void RGBt(unsigned int color, unsigned int *r,unsigned int *g,unsigned int *b)
 {

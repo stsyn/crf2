@@ -9,8 +9,8 @@ void optimize(Layer& id)
 {
 	id.lcnv[0]=0;
 	id.lcnv[1]=0;
-	id.lcnv[2]=getWidth(id);
-	id.lcnv[3]=getHeight(id);
+	id.lcnv[2]=getWidth(id)-1;
+	id.lcnv[3]=getHeight(id)-1;
 
 	bool safe = false;
 	int i, j;
@@ -32,7 +32,7 @@ ch_right:
 ch_top:
 	for (j=0;j<getHeight(id);j++) //top
 	{
-		for (i=id.lcnv[0];i<id.lcnv[2];i++)
+		for (i=id.lcnv[0];i<=id.lcnv[2];i++)
 			if (At(getColor(id,i,j)) !=0) 
 				goto ch_down;
 		id.lcnv[1]++;
@@ -40,7 +40,7 @@ ch_top:
 ch_down:
 	for (j=getHeight(id)-1;j>=0;j--) //down
 	{
-		for (i=id.lcnv[0];i<id.lcnv[2];i++)
+		for (i=id.lcnv[0];i<=id.lcnv[2];i++)
 			if (At(getColor(id,i,j)) !=0) 
 				return;
 		id.lcnv[3]--;
@@ -57,14 +57,13 @@ void SetBorders(Layer& id, int x, int y, int x2, int y2)
 
 void SetBordersBySize(Layer& id, int x, int y, int xk, int yk)
 {
-	SetBorders(id,x,y,x+xk,y+yk);
+	SetBorders(id,x,y,x+xk-1,y+yk-1);
 }
-
 
 
 int BordersSize(Layer& id)
 {
-	return abs(id.lcnv[2]-id.lcnv[0])*(id.lcnv[3]-id.lcnv[1]);
+	return abs(id.lcnv[2]-id.lcnv[0]+1)*(id.lcnv[3]-id.lcnv[1]+1);
 }
 
 void FindTransparencyBorder(Layer& id, Layer& resid, unsigned int msc, int overdrive)
@@ -79,8 +78,8 @@ void FindTransparencyBorder(Layer& id, Layer& resid, unsigned int msc, int overd
 		l = (resid.lcnv[0]<0?0:resid.lcnv[0]); r = (resid.lcnv[2]>=getWidth(id)?getWidth(id)-1:resid.lcnv[2]);
 		t = (resid.lcnv[1]<0?0:resid.lcnv[1]); d = (resid.lcnv[3]>=getHeight(id)?getHeight(id)-1:resid.lcnv[3]);
 	}
-	for (int i=l; i<r; i++)
-		for (int j=t; j<d; j++)
+	for (int i=l; i<=r; i++)
+		for (int j=t; j<=d; j++)
 		{
 			if (At(getColor(id,i,j)) < 128)
 			{
@@ -110,8 +109,8 @@ void FixBorder(Layer& id, int msc)
 	int l,r,t,d;
 	l = (id.lcnv[0]<0?0:id.lcnv[0]); r = (id.lcnv[2]>=getWidth(id)?getWidth(id)-1:id.lcnv[2]);
 	t = (id.lcnv[1]<0?0:id.lcnv[1]); d = (id.lcnv[3]>=getHeight(id)?getHeight(id)-1:id.lcnv[3]);
-	for (int i=l+1; i<r-1; i++)
-		for (int j=t+1; j<d-1; j++)
+	for (int i=l+1; i<r; i++)
+		for (int j=t+1; j<d; j++)
 		{
 			if (At(getColor(id,i,j)) >127) continue;
 			if (
@@ -220,7 +219,7 @@ void Smooth(Layer& id, int v,unsigned int msc)
 					if (x+1<getWidth(id) && At(getColor(id,x+1,y))<at2)
 					{
 						transparency(id,x+1,y,at2);
-						if (x+1 == id.lcnv[2]) 
+						if (x == id.lcnv[2]) 
 						{
 							id.lcnv[2]++;
 							r++;
@@ -229,7 +228,7 @@ void Smooth(Layer& id, int v,unsigned int msc)
 					if (y+1<getHeight(id) && At(getColor(id,x,y+1))<at2)
 					{
 						transparency(id,x,y+1,at2);
-						if (y+1 == id.lcnv[3]) 
+						if (y == id.lcnv[3]) 
 						{
 							id.lcnv[3]++;
 							d++;
@@ -242,24 +241,23 @@ void Smooth(Layer& id, int v,unsigned int msc)
 void Overlay (Layer& id, unsigned int color)
 {
 	int l,r,t,d;
-	l = (id.lcnv[0]<0?0:id.lcnv[0]); r = (id.lcnv[2]>=getWidth(id)?getWidth(id)-1:id.lcnv[2]);
-	t = (id.lcnv[1]<0?0:id.lcnv[1]); d = (id.lcnv[3]>=getHeight(id)?getHeight(id)-1:id.lcnv[3]);
+	l = (id.lcnv[0]<0?0:id.lcnv[0]); r = (id.lcnv[2]>=getWidth(id)?getWidth(id):id.lcnv[2]);
+	t = (id.lcnv[1]<0?0:id.lcnv[1]); d = (id.lcnv[3]>=getHeight(id)?getHeight(id):id.lcnv[3]);
 	DrawRect(id,color,l,t,r-l,d-t,1);
 }
 
 void Fill (Layer& id, unsigned int msc, int x, int y)
 {
 	int l,r,t,d;
-	l = (id.lcnv[0]<0?0:id.lcnv[0]); r = (id.lcnv[2]>=getWidth(id)?getWidth(id)-1:id.lcnv[2]);
-	t = (id.lcnv[1]<0?0:id.lcnv[1]); d = (id.lcnv[3]>=getHeight(id)?getHeight(id)-1:id.lcnv[3]);
+	l = (id.lcnv[0]<0?0:id.lcnv[0]); r = (id.lcnv[2]+1>=getWidth(id)?getWidth(id)-1:id.lcnv[2]);
+	t = (id.lcnv[1]<0?0:id.lcnv[1]); d = (id.lcnv[3]+1>=getHeight(id)?getHeight(id)-1:id.lcnv[3]);
 	unsigned int cvr = At(getColor(id,x,y));
 	if (msc == cvr) return;
 	transparency(id,x,y,msc);
-	bin_dots++;
-	if (x>id.lcnv[0] && At(getColor(id,x-1,y)) == cvr) Fill(id,msc,x-1,y);
-	if (y>id.lcnv[1] && At(getColor(id,x,y-1)) == cvr) Fill(id,msc,x,y-1);
-	if (x+1<id.lcnv[2] && At(getColor(id,x+1,y)) == cvr) Fill(id,msc,x+1,y);
-	if (y+1<id.lcnv[3] && At(getColor(id,x,y+1)) == cvr) Fill(id,msc,x,y+1);
+	if (x-1>l && At(getColor(id,x-1,y)) == cvr) Fill(id,msc,x-1,y);
+	if (y-1>t && At(getColor(id,x,y-1)) == cvr) Fill(id,msc,x,y-1);
+	if (x+1<r && At(getColor(id,x+1,y)) == cvr) Fill(id,msc,x+1,y);
+	if (y+1<d && At(getColor(id,x,y+1)) == cvr) Fill(id,msc,x,y+1);
 }
 
 
@@ -294,4 +292,14 @@ void NOT(Layer& id, Layer& op)
 	for (int i=l; i<r; i++)
 		for (int j=t; j<d; j++)
 			if (At(getColor(op,i,j))>127) transparency(id,i,j,0);
+}
+
+void AND(Layer& id, Layer& op)
+{
+	int l,r,t,d;
+	l = (id.lcnv[0]<op.lcnv[0]?op.lcnv[0]:id.lcnv[0]); r = (id.lcnv[2]>op.lcnv[2]?op.lcnv[2]:id.lcnv[2]);
+	t = (id.lcnv[1]<op.lcnv[1]?op.lcnv[1]:id.lcnv[1]); d = (id.lcnv[3]>op.lcnv[3]?op.lcnv[3]:id.lcnv[3]);
+	for (int i=l; i<r; i++)
+		for (int j=t; j<d; j++)
+			if (At(getColor(op,i,j))<127) transparency(id,i,j,0);
 }

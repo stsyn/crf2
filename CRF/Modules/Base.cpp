@@ -107,34 +107,6 @@ void HGradient(Layer& id, unsigned int colorA, unsigned int colorB, int x1, int 
 	}
 }
 	
-void IncludeLayer(Layer& id, Layer& tid, int x1, int y1, int mode)
-{
-	unsigned int a,r,g,b;
-	int i,j,mx,my,nx,ny;
-
-	if (x1<0) nx = -x1;
-	else nx = 0;
-	if (y1<0) ny = -y1;
-	else ny = 0;
-	
-	if (getWidth(id)+x1>getWidth(tid)) mx = getWidth(tid)-x1;
-	else mx = getWidth(id);
-	if (getHeight(id)+y1>getHeight(tid)) my = getHeight(tid)-y1;
-	else my = getHeight(id);
-
-	for (i = nx; i<mx; i++)
-		for (j = ny; j<my; j++)
-		{	
-			ARGBt(getColor(id,i,j),&a,&r,&g,&b);
-			MSDrawC(tid,x1+i,y1+j,a,r,g,b,mode);
-		}
-}
-
-void IncludeLayer(Layer& id, Layer& tid, int x1, int y1)
-{
-	IncludeLayer(id,tid,x1,y1,id.mode);
-}
-	
 void FragmentLayer(Layer& id, Layer& tid, int tx, int ty, int x2, int y2, int xk, int yk, int mode)
 {
 	unsigned int a,r,g,b;
@@ -161,6 +133,17 @@ void FragmentLayer(Layer& id, Layer& tid, int tx, int ty, int x2, int y2, int xk
 void FragmentLayer(Layer& id, Layer& tid, int tx, int ty, int x2, int y2, int xk, int yk)
 {
 	FragmentLayer(id,tid,tx,ty,x2,y2,xk,yk,id.mode);
+}
+
+	
+void IncludeLayer(Layer& id, Layer& tid, int x1, int y1, int mode)
+{
+	FragmentLayer(id,tid,x1+id.lcnv[0],y1+id.lcnv[1],id.lcnv[0],id.lcnv[1],id.lcnv[2]-id.lcnv[0]+1,id.lcnv[3]-id.lcnv[1]+1,mode);
+}
+
+void IncludeLayer(Layer& id, Layer& tid, int x1, int y1)
+{
+	FragmentLayer(id,tid,x1+id.lcnv[0],y1+id.lcnv[1],id.lcnv[0],id.lcnv[1],id.lcnv[2]-id.lcnv[0]+1,id.lcnv[3]-id.lcnv[1]+1,id.mode);
 }
 
 void DrawFrame(Layer& id, unsigned int color, int x, int y, int xk, int yk)

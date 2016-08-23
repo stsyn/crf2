@@ -13,7 +13,7 @@ private:
 
 bool getBit(int i, int pos)
 {
-	return (i >> pos) && 1;
+	return (i >> pos) & 1;
 }
 
 public:

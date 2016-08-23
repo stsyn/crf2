@@ -10,11 +10,11 @@
 #elif __APPLE__
 	#include <OpenGL/gl.h>
 	#include <OpenGL/glu.h>
-	#include <../SDL2/SDL.h>
+	#include "../SDL2/SDL.h"
 #else //UNIX
 	#include <GL/gl.h>
 	#include <GL/glu.h>
-	#include <../SDL2/SDL.h>
+	#include "../SDL2/SDL.h"
 #endif
 
 #include "Core.h"

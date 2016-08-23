@@ -15,5 +15,6 @@
 	void CircularShine(Layer& id, unsigned int msc, int x, int y, int r, int ar, int action);
 
 	void NOT(Layer& id, Layer& op);
+	void AND(Layer& id, Layer& op);
 
 #endif
