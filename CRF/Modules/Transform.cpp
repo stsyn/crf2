@@ -56,13 +56,13 @@ void TransformLayer(Layer& id, Layer& tid, int tx, int ty, int x2, int y2, int x
 		}
 }
 
-void TransformLayer(Layer& id, Layer& tid, int tx, int ty, int mode)
+inline void TransformLayer(Layer& id, Layer& tid, int tx, int ty, int mode)
 {
 	TransformLayer(id,tid,tx,ty,0,0,getWidth(id),getHeight(id),mode);
 	return;
 }
 
-void RotateLayer(Layer& id, Layer& tid, int tx, int ty, int mode)
+inline void RotateLayer(Layer& id, Layer& tid, int tx, int ty, int mode)
 {
 	if (mode == 0) TransformLayer(id,tid,tx,ty,0,0,getWidth(id),getHeight(id),0);
 	else if (mode == 1) TransformLayer(id,tid,tx,ty,0,0,getWidth(id),getHeight(id),6);
@@ -70,7 +70,7 @@ void RotateLayer(Layer& id, Layer& tid, int tx, int ty, int mode)
 	else if (mode == 3) TransformLayer(id,tid,tx,ty,0,0,getWidth(id),getHeight(id),5);
 }
 
-void RotateLayer(Layer& id, Layer& tid, int tx, int ty, int x2, int y2, int xk, int yk, int mode)
+inline void RotateLayer(Layer& id, Layer& tid, int tx, int ty, int x2, int y2, int xk, int yk, int mode)
 {
 	if (mode == 0) TransformLayer(id,tid,tx,ty,x2,y2,xk,yk,0);
 	else if (mode == 1) TransformLayer(id,tid,tx,ty,x2,y2,xk,yk,6);

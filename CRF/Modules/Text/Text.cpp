@@ -30,7 +30,7 @@ int TextWidth(Font& font, char *str)
 	return ot;
 }
 
-int TextHeight(Font& font, char *str)
+inline int TextHeight(Font& font, char *str)
 {
 	return font.height;
 }

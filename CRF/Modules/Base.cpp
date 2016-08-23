@@ -6,6 +6,7 @@
 
 #include "../Core.h"
 #include "../Layer.h"
+#include "Base.h"
 #include <stdarg.h>
 
 void DrawVLine(Layer& id, unsigned int color, int x1, int y1, int k)
@@ -18,15 +19,6 @@ void DrawVLine(Layer& id, unsigned int color, int x1, int y1, int k)
 	for (i = 0; i>=k; i--)
 			MSDrawC(id,x1,y1+i,a,r,g,b,0);
 }
-
-void FDrawVLine(Layer& id, unsigned int color, int x1, int y1, int k)
-{
-	int i;
-	for (i = 0; i<k; i++)
-			plot(id,x1,y1+i,color);
-	for (i = 0; i>=k; i--)
-			plot(id,x1,y1+i,color);
-}
 	
 void DrawHLine(Layer& id, unsigned int color, int x1, int y1, int k)
 {
@@ -38,23 +30,6 @@ void DrawHLine(Layer& id, unsigned int color, int x1, int y1, int k)
 	for (i = 0; i>=k; i--)
 			MSDrawC(id,x1+i,y1,a,r,g,b,0);
 }
-
-void FDrawHLine(Layer& id, unsigned int color, int x1, int y1, int k)
-{
-	int i;
-	for (i = 0; i<k; i++)
-			plot(id,x1+i,y1,color);
-	for (i = 0; i>=k; i--)
-			plot(id,x1+i,y1,color);
-}
-
-void FDrawRect(Layer& id, unsigned int color, int x1, int y1, int xk, int yk)
-{
-	int i,j;
-	for (i = 0; i<xk; i++)
-		for (j = 0; j<yk; j++)
-			plot(id,x1+i,y1+j,color);
-}
 	
 void DrawRect(Layer& id, unsigned int color, int x1, int y1, int xk, int yk, int mode)
 {
@@ -64,11 +39,6 @@ void DrawRect(Layer& id, unsigned int color, int x1, int y1, int xk, int yk, int
 	for (i = 0; i<xk; i++)
 		for (j = 0; j<yk; j++)
 			MSDrawC(id,x1+i,y1+j,a,r,g,b,mode);
-}
-
-void DrawRect(Layer& id, unsigned int color, int x1, int y1, int xk, int yk)
-{
-	DrawRect(id,color,x1,y1,xk,yk,0);
 }
 	
 void VGradient(Layer& id, unsigned int colorA, unsigned int colorB, int x1, int y1, int xk, int yk, int mode)
@@ -130,34 +100,12 @@ void FragmentLayer(Layer& id, Layer& tid, int tx, int ty, int x2, int y2, int xk
 		}
 }
 
-void FragmentLayer(Layer& id, Layer& tid, int tx, int ty, int x2, int y2, int xk, int yk)
-{
-	FragmentLayer(id,tid,tx,ty,x2,y2,xk,yk,id.mode);
-}
-
-	
-void IncludeLayer(Layer& id, Layer& tid, int x1, int y1, int mode)
-{
-	FragmentLayer(id,tid,x1+id.lcnv[0],y1+id.lcnv[1],id.lcnv[0],id.lcnv[1],id.lcnv[2]-id.lcnv[0]+1,id.lcnv[3]-id.lcnv[1]+1,mode);
-}
-
-void IncludeLayer(Layer& id, Layer& tid, int x1, int y1)
-{
-	FragmentLayer(id,tid,x1+id.lcnv[0],y1+id.lcnv[1],id.lcnv[0],id.lcnv[1],id.lcnv[2]-id.lcnv[0]+1,id.lcnv[3]-id.lcnv[1]+1,id.mode);
-}
-
 void DrawFrame(Layer& id, unsigned int color, int x, int y, int xk, int yk)
 {
 	DrawHLine(id,color,x,y,xk);
 	DrawHLine(id,color,x,y+yk-1,xk);
 	DrawVLine(id,color,x,y,yk);
 	DrawVLine(id,color,x+xk-1,y,yk);
-}
-
-void cloneLayer(Layer& id,Layer& tid)
-{
-	buildLayer(tid,getWidth(id),getHeight(id));
-	IncludeLayer(id,tid,0,0);	
 }
 
 void ColorFill (Layer& id, unsigned int msc, int x, int y)
