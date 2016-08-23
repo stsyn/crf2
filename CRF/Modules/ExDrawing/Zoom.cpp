@@ -3,8 +3,8 @@
   Zooming procedure. Using:
 
   ZoomRender(
-  <int> source layer id,
-  <int> target layer id,
+  <int> source Layer& id,
+  <int> target Layer& id,
   <int> x coordinate of top left corner at target,
   <int> y coordinate of top left corner at target,
   <int> final width,
@@ -19,8 +19,9 @@
 
 #include "../Base.h"
 #include "../../Core.h"
+#include "../../Layer.h"
 
-void ZoomRender(int id, int tid, int tx, int ty, int x1, int y1, int cx, int cy, int x2, int y2, int mode)
+void ZoomRender(Layer& id, Layer& tid, int tx, int ty, int x1, int y1, int cx, int cy, int x2, int y2, int mode)
 {
 	unsigned int a,r,g,b;
 	int i,j,mx,my,nx,ny;
@@ -61,12 +62,12 @@ void ZoomRender(int id, int tid, int tx, int ty, int x1, int y1, int cx, int cy,
 
 }
 
-void ZoomRender(int id, int tid, int tx, int ty, int x1, int y1, int cx, int cy, int x2, int y2)
+void ZoomRender(Layer& id, Layer& tid, int tx, int ty, int x1, int y1, int cx, int cy, int x2, int y2)
 {
 	ZoomRender(id,tid,tx,ty,x2,y2,cx,cy,x2,y2,0);
 }
 
-void ZoomRender(int id, int tid, int tx, int ty, int x1, int y1)
+void ZoomRender(Layer& id, Layer& tid, int tx, int ty, int x1, int y1)
 {
 	ZoomRender(id,tid,tx,ty,x1,y1,0,0,getWidth(id),getHeight(id),0);
 }

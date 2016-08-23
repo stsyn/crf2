@@ -4,22 +4,22 @@
 
 */
 
-#include <stdio.h>
-#include <string.h>
 #include "../Core.h"
+#include "../Layer.h"
+#include <stdarg.h>
 
-void DrawVLine(int id, unsigned int color, int x1, int y1, int k)
+void DrawVLine(Layer& id, unsigned int color, int x1, int y1, int k)
 {
 	unsigned int a,r,g,b;
 	int i;
 	ARGBt(color,&a,&r,&g,&b);
 	for (i = 0; i<k; i++)
-			plot(id,x1,y1+i,a,r,g,b);
+			MSDrawC(id,x1,y1+i,a,r,g,b,0);
 	for (i = 0; i>=k; i--)
-			plot(id,x1,y1+i,a,r,g,b);
+			MSDrawC(id,x1,y1+i,a,r,g,b,0);
 }
 
-void FDrawVLine(int id, unsigned int color, int x1, int y1, int k)
+void FDrawVLine(Layer& id, unsigned int color, int x1, int y1, int k)
 {
 	int i;
 	for (i = 0; i<k; i++)
@@ -28,18 +28,18 @@ void FDrawVLine(int id, unsigned int color, int x1, int y1, int k)
 			plot(id,x1,y1+i,color);
 }
 	
-void DrawHLine(int id, unsigned int color, int x1, int y1, int k)
+void DrawHLine(Layer& id, unsigned int color, int x1, int y1, int k)
 {
 	unsigned int a,r,g,b;
 	int i;
 	ARGBt(color,&a,&r,&g,&b);
 	for (i = 0; i<k; i++)
-			plot(id,x1+i,y1,a,r,g,b);
+			MSDrawC(id,x1+i,y1,a,r,g,b,0);
 	for (i = 0; i>=k; i--)
-			plot(id,x1+i,y1,a,r,g,b);
+			MSDrawC(id,x1+i,y1,a,r,g,b,0);
 }
 
-void FDrawHLine(int id, unsigned int color, int x1, int y1, int k)
+void FDrawHLine(Layer& id, unsigned int color, int x1, int y1, int k)
 {
 	int i;
 	for (i = 0; i<k; i++)
@@ -47,18 +47,8 @@ void FDrawHLine(int id, unsigned int color, int x1, int y1, int k)
 	for (i = 0; i>=k; i--)
 			plot(id,x1+i,y1,color);
 }
-	
-void DrawRect(int id, unsigned int color, int x1, int y1, int xk, int yk)
-{
-	unsigned int a,r,g,b;
-	int i,j;
-	ARGBt(color,&a,&r,&g,&b);
-	for (i = 0; i<xk; i++)
-		for (j = 0; j<yk; j++)
-			plot(id,x1+i,y1+j,a,r,g,b);
-}
 
-void FDrawRect(int id, unsigned int color, int x1, int y1, int xk, int yk)
+void FDrawRect(Layer& id, unsigned int color, int x1, int y1, int xk, int yk)
 {
 	int i,j;
 	for (i = 0; i<xk; i++)
@@ -66,49 +56,22 @@ void FDrawRect(int id, unsigned int color, int x1, int y1, int xk, int yk)
 			plot(id,x1+i,y1+j,color);
 }
 	
-void DrawRect(int id, unsigned int color, int x1, int y1, int xk, int yk, int mode)
+void DrawRect(Layer& id, unsigned int color, int x1, int y1, int xk, int yk, int mode)
 {
 	unsigned int a,r,g,b;
 	int i,j;
 	ARGBt(color,&a,&r,&g,&b);
 	for (i = 0; i<xk; i++)
 		for (j = 0; j<yk; j++)
-		{	
-			if (a != 255) {
-				if (mode == 0) plot(id,x1+i,y1+j,a,r,g,b);
-				else if (mode == 1) add(id,x1+i,y1+j,a,r,g,b);
-				else if (mode == 2) mult(id,x1+i,y1+j,a,r,g,b);
-				else if (mode == 3) transparency(id,x1+i,y1+j,a);
-				else if (mode == 4) invert(id,x1+i,y1+j);
-				else if (mode == 5) rem(id,x1+i,y1+j,a,r,g,b);
-				else if (mode == 6) multa(id,x1+i,y1+j,a);
-			}
-			else
-				{
-				if (mode == 0) plot(id,x1+i,y1+j,r,g,b);
-				else if (mode == 1) add(id,x1+i,y1+j,r,g,b);
-				else if (mode == 2) mult(id,x1+i,y1+j,r,g,b);
-				else if (mode == 3) transparency(id,x1+i,y1+j,a);
-				else if (mode == 4) invert(id,x1+i,y1+j);
-				else if (mode == 5) rem(id,x1+i,y1+j,r,g,b);
-			}
-		}
+			MSDrawC(id,x1+i,y1+j,a,r,g,b,mode);
 }
 
-void DoGray(int id, int tid, unsigned int value, int x1, int y1)
+void DrawRect(Layer& id, unsigned int color, int x1, int y1, int xk, int yk)
 {
-	unsigned int a,r,g,b;
-	int i,j;
-	for (i = 0; i<getWidth(id); i++)
-		for (j = 0; j<getHeight(id); j++)
-		{	
-			ARGBt(getColor(id,i,j),&a,&r,&g,&b);
-			if (a == 0) continue;
-			grayer(id,tid,x1+i,y1+j,i,j,value);
-		}
+	DrawRect(id,color,x1,y1,xk,yk,0);
 }
 	
-void VGradient(int id, unsigned int colorA, unsigned int colorB, int x1, int y1, int xk, int yk, int mode)
+void VGradient(Layer& id, unsigned int colorA, unsigned int colorB, int x1, int y1, int xk, int yk, int mode)
 {
 	int a1,r1,g1,b1,a2,r2,g2,b2,da,dr,dg,db;
 	int i,j;
@@ -122,17 +85,11 @@ void VGradient(int id, unsigned int colorA, unsigned int colorB, int x1, int y1,
 		db = b1 + ((b2 - b1) * j / yk);
 		dr = r1 + ((r2 - r1) * j / yk);
 		for (i=0; i<xk; i++)
-		{
-			if (mode == 0) plot(id, i+x1, j+y1, da, dr, dg, db);
-			if (mode == 1) add(id, i+x1, j+y1, da, dr, dg, db);
-			if (mode == 2) mult(id, i+x1, j+y1, da, dr, dg, db);
-			if (mode == 3) transparency(id, i+x1, j+y1, da);
-			if (mode == 5) rem(id, i+x1, j+y1, da, dr, dg, db);
-		}
+			MSDrawC(id, i+x1, j+y1, da, dr, dg, db, mode);
 	}
 }
 	
-void HGradient(int id, unsigned int colorA, unsigned int colorB, int x1, int y1, int xk, int yk, int mode)
+void HGradient(Layer& id, unsigned int colorA, unsigned int colorB, int x1, int y1, int xk, int yk, int mode)
 {
 	int a1,r1,g1,b1,a2,r2,g2,b2,da,dr,dg,db;
 	int i,j;
@@ -146,17 +103,11 @@ void HGradient(int id, unsigned int colorA, unsigned int colorB, int x1, int y1,
 		db = b1 + ((b2 - b1) * i / xk);
 		dr = r1 + ((r2 - r1) * i / xk);
 		for (j=0; j<yk; j++)
-		{
-			if (mode == 0) plot(id, i+x1, j+y1, da, dr, dg, db);
-			else if (mode == 1) add(id, i+x1, j+y1, da, dr, dg, db);
-			else if (mode == 2) mult(id, i+x1, j+y1, da, dr, dg, db);
-			else if (mode == 3) transparency(id, i+x1, j+y1, da);
-			else if (mode == 5) rem(id, i+x1, j+y1, da, dr, dg, db);
-		}
+			MSDrawC(id, i+x1, j+y1, da, dr, dg, db, mode);
 	}
 }
 	
-void IncludeLayer(int id, int tid, int x1, int y1, int mode)
+void IncludeLayer(Layer& id, Layer& tid, int x1, int y1, int mode)
 {
 	unsigned int a,r,g,b;
 	int i,j,mx,my,nx,ny;
@@ -175,34 +126,16 @@ void IncludeLayer(int id, int tid, int x1, int y1, int mode)
 		for (j = ny; j<my; j++)
 		{	
 			ARGBt(getColor(id,i,j),&a,&r,&g,&b);
-			if (a == 0 && mode!=6) continue;
-			if (a != 255) 
-			{
-				if (mode == 0) plot(tid,x1+i,y1+j,a,r,g,b);
-				else if (mode == 1) add(tid,x1+i,y1+j,a,r,g,b);
-				else if (mode == 2) mult(tid,x1+i,y1+j,a,r,g,b);
-				else if (mode == 3) transparency(tid, i+x1, j+y1, a);
-				else if (mode == 5) rem(tid,x1+i,y1+j,a,r,g,b);
-				else if (mode == 6) multa(tid,x1+i,y1+j,a);
-				else if (mode == 7) rema(tid,x1+i,y1+j,a);
-			}
-			else
-			{
-				if (mode == 0) plot(tid,x1+i,y1+j,getColor(id,i,j));
-				else if (mode == 1) add(tid,x1+i,y1+j,r,g,b);
-				else if (mode == 2) mult(tid,x1+i,y1+j,r,g,b);
-				else if (mode == 3) transparency(tid,i+x1, j+y1, 255);
-				else if (mode == 5) rem(tid,x1+i,y1+j,r,g,b);
-			}
+			MSDrawC(tid,x1+i,y1+j,a,r,g,b,mode);
 		}
 }
 
-void IncludeLayer(int id, int tid, int x1, int y1)
+void IncludeLayer(Layer& id, Layer& tid, int x1, int y1)
 {
-	IncludeLayer(id,tid,x1,y1,0);
+	IncludeLayer(id,tid,x1,y1,id.mode);
 }
 	
-void FragmentLayer(int id, int tid, int tx, int ty, int x2, int y2, int xk, int yk, int mode)
+void FragmentLayer(Layer& id, Layer& tid, int tx, int ty, int x2, int y2, int xk, int yk, int mode)
 {
 	unsigned int a,r,g,b;
 	int i,j,mx,my,nx,ny;
@@ -221,171 +154,48 @@ void FragmentLayer(int id, int tid, int tx, int ty, int x2, int y2, int xk, int 
 		for (j = ny; j<my; j++)
 		{	
 			ARGBt(getColor(id,x2 + i,y2 + j),&a,&r,&g,&b);
-			if (a == 0 && mode!=6) continue;
-			if (a != 255) 
-			{
-				if (mode == 0) plot(tid,tx+i,ty+j,a,r,g,b);
-				else if (mode == 1) add(tid,tx+i,ty+j,a,r,g,b);
-				else if (mode == 2) mult(tid,tx+i,ty+j,a,r,g,b);
-				else if (mode == 5) rem(tid,tx+i,ty+j,a,r,g,b);
-				else if (mode == 6) multa(tid,tx+i,ty+j,a);
-			}
-			else
-			{
-				if (mode == 0) plot(tid,tx+i,ty+j,getColor(id,x2 + i,y2 + j));
-				else if (mode == 1) add(tid,tx+i,ty+j,r,g,b);
-				else if (mode == 2) mult(tid,tx+i,ty+j,r,g,b);
-				else if (mode == 5) rem(tid,tx+i,ty+j,r,g,b);
-			}
+			MSDrawC(tid,tx+i,ty+j,a,r,g,b,mode);
 		}
 }
 
-void FragmentLayer(int id, int tid, int tx, int ty, int x2, int y2, int xk, int yk)
+void FragmentLayer(Layer& id, Layer& tid, int tx, int ty, int x2, int y2, int xk, int yk)
 {
-	FragmentLayer(id,tid,tx,ty,x2,y2,xk,yk,0);
+	FragmentLayer(id,tid,tx,ty,x2,y2,xk,yk,id.mode);
 }
 
-void BWNoise(int id, int x1, int y1, int xk, int yk)
+void DrawFrame(Layer& id, unsigned int color, int x, int y, int xk, int yk)
 {
-	int i,j,t;
-	for (i = 0; i<xk; i++)
-		for (j = 0; j<yk; j++)
-		{	
-			t = gener(256);
-			plot(id,x1+i,y1+j,t,t,t);
-		}
+	DrawHLine(id,color,x,y,xk);
+	DrawHLine(id,color,x,y+yk-1,xk);
+	DrawVLine(id,color,x,y,yk);
+	DrawVLine(id,color,x+xk-1,y,yk);
 }
 
-void TransformLayer(int id, int tid, int tx, int ty, int x2, int y2, int xk, int yk, int mode)
+void cloneLayer(Layer& id,Layer& tid)
 {
-	/*
-
-  modes:
-  0 - none
-  1 - invert vertical
-  2 - invert horizontal
-  3 - rotate 180
-  4 - transponation //later
-	*/
-	unsigned int a,r,g,b;
-	int i,j,mx,my,nx,ny,tdx, tdy, ax, ay;
-
-	if (tx<0) nx = -tx;
-	else nx = 0;
-	if (ty<0) ny = -ty;
-	else ny = 0;
-
-	if ((mode & 4) == 4)
-	{
-		ax = yk;
-		ay = xk;
-	}
-	else
-	{
-		ax = xk;
-		ay = yk;
-	}
-
-	int bx = x2, by = y2;
-	if ((mode & 4) == 4)
-	{
-		bx = y2;
-		by = x2;
-	}
-
-	if (ax+tx>getWidth(tid)) mx = getWidth(tid)-tx;
-	else mx = ax;
-	if (ay+ty>getHeight(tid)) my = getHeight(tid)-ty;
-	else my = ay;
-
-	for (i = nx; i<mx; i++)
-		for (j = ny; j<my; j++)
-		{	
-			if ((mode & 1) == 1) tdy=ay-j+by-1;
-			else tdy=by + j;
-			if ((mode & 2) == 2) tdx=ax-i+bx-1;
-			else tdx=bx + i;
-			if ((mode & 4) == 4) ARGBt(getColor(id,tdy,tdx),&a,&r,&g,&b);
-			else ARGBt(getColor(id,tdx,tdy),&a,&r,&g,&b);
-			if (a == 0) continue;
-			if (a != 255) 
-			{
-				plot(tid,tx+i,ty+j,a,r,g,b);
-			}
-			else
-			{
-				if ((mode & 4) == 4) plot(tid,tx+i,ty+j,getColor(id,tdy,tdx));
-				else plot(tid,tx+i,ty+j,getColor(id,tdx,tdy));
-			}
-		}
+	buildLayer(tid,getWidth(id),getHeight(id));
+	IncludeLayer(id,tid,0,0);	
 }
 
-void TransformLayer(int id, int tid, int tx, int ty, int mode)
+void ColorFill (Layer& id, unsigned int msc, int x, int y)
 {
-	/*
- 0 6 3 5
-  modes:
-  0 - none
-  1 - invert vertical
-  2 - invert horizontal
-  3 - rotate 180
-  4 - invert diagonal
-  5 - rotate left
-  6 - rotate right
-  7 - i dunno
-	*/
-	unsigned int a,r,g,b;
-	int i,j,mx,my,nx,ny,tdx, tdy,ax,ay;
-
-	if (tx<0) nx = -tx;
-	else nx = 0;
-	if (ty<0) ny = -ty;
-	else ny = 0;
-
-	if ((mode & 4) == 4)
-	{
-		ax = getHeight(id);
-		ay = getWidth(id);
-	}
-	else
-	{
-		ax = getWidth(id);
-		ay = getHeight(id);
-	}
-	
-	if (ax+tx>getWidth(tid)) mx = getWidth(tid)-tx;
-	else mx = ax;
-	if (ay+ty>getHeight(tid)) my = getHeight(tid)-ty;
-	else my = ay;
-
-	for (i = nx; i<mx; i++)
-		for (j = ny; j<my; j++)
-		{	
-			if ((mode & 1) == 1) tdy=ay-j-1;
-			else tdy=j;
-			if ((mode & 2) == 2) tdx=ax-i-1;
-			else tdx=i;
-			if ((mode & 4) == 4) ARGBt(getColor(id,tdy,tdx),&a,&r,&g,&b);
-			else ARGBt(getColor(id,tdx,tdy),&a,&r,&g,&b);
-			if (a == 0) continue;
-			if (a != 255) 
-			{
-				plot(tid,tx+i,ty+j,a,r,g,b);
-			}
-			else
-			{
-				if ((mode & 4) == 4) plot(tid,tx+i,ty+j,getColor(id,tdy,tdx));
-				else plot(tid,tx+i,ty+j,getColor(id,tdx,tdy));
-			}
-		}
+	unsigned int cvr = getColor(id,x,y);
+	if (msc == cvr) return;
+	plot(id,x,y,msc);
+	if (x>0 && getColor(id,x-1,y) == cvr) ColorFill(id,msc,x-1,y);
+	if (y>0 && getColor(id,x,y-1) == cvr) ColorFill(id,msc,x,y-1);
+	if (x+1<getWidth(id) && getColor(id,x+1,y) == cvr) ColorFill(id,msc,x+1,y);
+	if (y+1<getHeight(id) && getColor(id,x,y+1) == cvr) ColorFill(id,msc,x,y+1);
 }
 
-void DrawFrame(int id, unsigned int color, int x, int y, int xk, int yk)
+void StackedRender(int count, ...)
 {
-	FDrawHLine(id,color,x,y,xk);
-	FDrawHLine(id,color,x,y+yk-1,xk);
-	FDrawVLine(id,color,x,y,yk);
-	FDrawVLine(id,color,x+xk-1,y,yk);
+	va_list ap;
+	va_start(ap,count);
+	Layer context;
+	cloneLayer(*_cnv[va_arg(ap,int)],context);
+	for (int i=1; i<count; i++) IncludeLayer(*_cnv[va_arg(ap,int)],context,0,0);
+	va_end(ap);
+	renderer(context);
 }
-
 

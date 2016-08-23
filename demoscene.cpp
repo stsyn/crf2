@@ -21,34 +21,44 @@
 	#include <SDL2/SDL.h>
 #endif
 
+Layer tech, trixie, context, lighting, circle, hdr;
+Font PS2P;
+
 int init()
 {
-	tex_read("DATA/TEXT/trixie.tga",101);
-	buildLayer(100,xmax,ymax);
-	buildLayer(103,xmax,ymax);
-	buildLayer(104,xmax,ymax);
+
+	tex_read("trixie.tga",trixie);
+	buildLayer(context,xmax,ymax);
+	buildLayer(lighting,xmax,ymax);
+	buildLayer(hdr,xmax,ymax);
+	buildLayer(tech,xmax,ymax);
+	buildLayer(circle,xmax,ymax);
+	PS2P.CreateMonospacedFont("FONT/font10p.tga",8);
 	return 0;
 }
 
 void OP()
 {
-	FDrawRect(103,tRGB(0,0,0),0,0,xmax,ymax);
-	reset(104);
-	plot(104,xmax/2,ymax/2,0,0,0);
-	Smooth(104,192,255);
-	Overlay(104,tRGB(128,128,128));
-	IncludeLayer(104,103,0,0);
-	reset(100);
-	reset(200);
-	ZoomRender(101,100,(xmax-getWidth(101)*ymax/getHeight(101))/2,0,getWidth(101)*ymax/getHeight(101),ymax);
-	DrawRect(100,tRGB(64,64,64),0,0,xmax,ymax,2);
-	FindTransparencyBorder(100,200,255);
-	Smooth(200,8,255);
-	Overlay(200,tRGB(64,64,64));
-	IncludeLayer(104,200,0,0,7);
-	IncludeLayer(200,100,0,0,1);
-	IncludeLayer(100,103,0,0);
-	renderer(103);
+	FDrawRect(tech,tRGB(0,0,0),0,0,xmax,ymax);
+	reset(context);
+	reset(lighting);
+	ZoomRender(trixie,context,(xmax-getWidth(trixie)*ymax/getHeight(trixie))/2,0,getWidth(trixie)*ymax/getHeight(trixie),ymax);
+	MoveLayer(context,-10,-10);
+//	FindTransparencyBorder(context,lighting,255,true);
+//	FixBorder(lighting,255);
+//	LinearTransparencyBorder(lighting,hdr,255,260,100,16);
+//	DrawRect(context,tRGB(64,64,64),0,0,xmax,ymax,2);
+//	Overlay(hdr,tRGB(255,255,255));
+//	IncludeLayer(hdr,context,0,0,1);
+//	hdr.mode=RENDER_ADD;
+	char strn[16];
+	DrawRect(context,tRGB(128,128,128),0,0,xmax,ymax,2);
+
+	sprintf(strn,"%i | %i | %i",fps,frameskip, dticks);
+	PrintText(context,PS2P,strn,ARGB(128,255,255,255),0,0);
+
+	renderer(context);
+//	StackedRender(2,context.id,hdr.id);
 }
 
 void KOP()

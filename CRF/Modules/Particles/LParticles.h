@@ -1,4 +1,4 @@
-#include "Lib.h"
+#include "../../Layer.h"
 
 class LParticle
 {
@@ -16,7 +16,7 @@ class LParticle
 			sbrightness = 255;
 		}
 
-		void LDraw(int id, int x, int y, int size, int brightness)
+		void LDraw(Layer& id, int x, int y, int size, int brightness)
 		{
 			brightness = brightness < 256 ? brightness : 255;
 			brightness = brightness > -1 ? brightness : 0;
@@ -37,12 +37,12 @@ class LParticle
 			if (drawcore) add(id,x,y,r,g,b);
 		}
 
-		void LDraw(int id, int x, int y)
+		void LDraw(Layer& id, int x, int y)
 		{
 			LDraw(id,x,y,size,brightness);
 		}
 
-		void LTDraw(int id, int x, int y, int sizeup, int brightnessup)
+		void LTDraw(Layer& id, int x, int y, int sizeup, int brightnessup)
 		{
 			LDraw(id,x,y,size+sizeup,brightness+brightnessup);
 		}

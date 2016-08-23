@@ -63,6 +63,10 @@ SOURCE=.\CRF\Modules\Base.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CRF\Modules\Binaries.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CRF\Core.cpp
 # End Source File
 # Begin Source File
@@ -71,7 +75,11 @@ SOURCE=.\demoscene.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CRF\Modules\Binaries\Main.cpp
+SOURCE=.\CRF\Modules\Geometry.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CRF\Layer.cpp
 # End Source File
 # Begin Source File
 
@@ -83,7 +91,19 @@ SOURCE=.\CRF\Platform.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\CRF\Modules\Text.cpp
+SOURCE=.\CRF\Modules\Random.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CRF\Modules\ExDrawing\Solar.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CRF\Modules\Text\Text.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\CRF\Modules\Transform.cpp
 # End Source File
 # Begin Source File
 
@@ -99,11 +119,27 @@ SOURCE=.\CRF\Modules\Base.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\CRF\Modules\Binaries.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\CRF\Core.h
 # End Source File
 # Begin Source File
 
 SOURCE=.\CRF.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CRF\Modules\Text\Font.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CRF\Modules\Geometry.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CRF\Layer.h
 # End Source File
 # Begin Source File
 
@@ -123,10 +159,6 @@ SOURCE=.\CRF\Modules\Sprites\LSprite.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CRF\Modules\Binaries\Main.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\CRF\Modules\ExDrawing\Mask.h
 # End Source File
 # Begin Source File
@@ -135,7 +167,19 @@ SOURCE=.\CRF\Platform.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\CRF\Modules\Text.h
+SOURCE=.\CRF\Modules\Random.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CRF\Modules\ExDrawing\Solar.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CRF\Modules\Text\Text.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CRF\Modules\Transform.h
 # End Source File
 # Begin Source File
 

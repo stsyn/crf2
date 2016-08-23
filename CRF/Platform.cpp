@@ -191,7 +191,7 @@ rtr:
 
 int exec()
 {
-	l_init();
+	l_init("DATA/TEXT/");
 	if(SDL_Init(SDL_INIT_EVERYTHING))
 	{
 		fprintf(stderr, "Unable to initialize SDL:  %s\n", SDL_GetError());

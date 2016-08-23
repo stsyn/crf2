@@ -1,6 +1,7 @@
 #include "../../Core.h"
+#include "../../Layer.h"
 
-void MaskedLayer(int id, int tid, int tx, int ty, int ColorR, int ColorG, int ColorB)
+void MaskedLayer(Layer& id, Layer& tid, int tx, int ty, int ColorR, int ColorG, int ColorB)
 {
 	unsigned int colors[4][4];
 	RGBt(ColorR,&colors[1][1],&colors[1][2],&colors[1][3]);

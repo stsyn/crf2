@@ -1,4 +1,4 @@
-#include "Lib.h"
+#include "../../Layer.h"
 
 class LPController
 {
@@ -59,14 +59,14 @@ public:
 		Spawn(defspeed,defangle);
 	}
 
-	void Draw(int target)
+	void Draw(Layer& target)
 	{
 		for (int i=0; i<maxcount; i++)
 			if (isalive[i]) 
 				P[i].Draw(target,0,0,camerax,cameray);
 	}
 
-	void Draw(int target, int sizeup, int brightness)
+	void Draw(Layer& target, int sizeup, int brightness)
 	{
 		for (int i=0; i<maxcount; i++)
 			if (isalive[i]) 
