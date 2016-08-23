@@ -56,28 +56,6 @@ void TransformLayer(Layer& id, Layer& tid, int tx, int ty, int x2, int y2, int x
 		}
 }
 
-inline void TransformLayer(Layer& id, Layer& tid, int tx, int ty, int mode)
-{
-	TransformLayer(id,tid,tx,ty,0,0,getWidth(id),getHeight(id),mode);
-	return;
-}
-
-inline void RotateLayer(Layer& id, Layer& tid, int tx, int ty, int mode)
-{
-	if (mode == 0) TransformLayer(id,tid,tx,ty,0,0,getWidth(id),getHeight(id),0);
-	else if (mode == 1) TransformLayer(id,tid,tx,ty,0,0,getWidth(id),getHeight(id),6);
-	else if (mode == 2) TransformLayer(id,tid,tx,ty,0,0,getWidth(id),getHeight(id),3);
-	else if (mode == 3) TransformLayer(id,tid,tx,ty,0,0,getWidth(id),getHeight(id),5);
-}
-
-inline void RotateLayer(Layer& id, Layer& tid, int tx, int ty, int x2, int y2, int xk, int yk, int mode)
-{
-	if (mode == 0) TransformLayer(id,tid,tx,ty,x2,y2,xk,yk,0);
-	else if (mode == 1) TransformLayer(id,tid,tx,ty,x2,y2,xk,yk,6);
-	else if (mode == 2) TransformLayer(id,tid,tx,ty,x2,y2,xk,yk,3);
-	else if (mode == 3) TransformLayer(id,tid,tx,ty,x2,y2,xk,yk,5);
-}
-
 void MoveLayer(Layer& id, int xa, int ya)
 {
 	int sx,sy,dx,dy,ex,ey;
