@@ -53,12 +53,16 @@ inline void FragmentLayer(Layer& id, Layer& tid, int tx, int ty, int x2, int y2,
 	
 inline void IncludeLayer(Layer& id, Layer& tid, int x1, int y1, int mode)
 {
-	FragmentLayer(id,tid,x1+id.lcnv[0],y1+id.lcnv[1],id.lcnv[0],id.lcnv[1],id.lcnv[2]-id.lcnv[0]+1,id.lcnv[3]-id.lcnv[1]+1,mode);
+	int l,t,r,d;
+	borderCheck(id,&l,&t,&r,&d);
+	FragmentLayer(id,tid,x1+l,y1+t,l,t,r-l+1,d-t+1,mode);
 }
 
 inline void IncludeLayer(Layer& id, Layer& tid, int x1, int y1)
 {
-	FragmentLayer(id,tid,x1+id.lcnv[0],y1+id.lcnv[1],id.lcnv[0],id.lcnv[1],id.lcnv[2]-id.lcnv[0]+1,id.lcnv[3]-id.lcnv[1]+1,id.mode);
+	int l,t,r,d;
+	borderCheck(id,&l,&t,&r,&d);
+	FragmentLayer(id,tid,x1+l,y1+t,l,t,r-l+1,d-t+1,id.mode);
 }
 
 inline void cloneLayer(Layer& id,Layer& tid)

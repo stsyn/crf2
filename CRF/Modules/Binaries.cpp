@@ -5,7 +5,7 @@
 
 unsigned long int bin_dots=0;
 
-void optimize(Layer& id)
+void CalcBorder(Layer& id)
 {
 	id.lcnv[0]=0;
 	id.lcnv[1]=0;
@@ -63,7 +63,10 @@ void SetBordersBySize(Layer& id, int x, int y, int xk, int yk)
 
 int BordersSize(Layer& id)
 {
-	return abs(id.lcnv[2]-id.lcnv[0]+1)*(id.lcnv[3]-id.lcnv[1]+1);
+	int l,r,t,d;
+	borderCheck(id,&l,&t,&r,&d);
+	int or = abs(r-l+1)*(d-t+1);
+	return or<0?0:or;
 }
 
 void FindTransparencyBorder(Layer& id, Layer& resid, unsigned int msc, int overdrive)
@@ -75,8 +78,7 @@ void FindTransparencyBorder(Layer& id, Layer& resid, unsigned int msc, int overd
 	}
 	else
 	{
-		l = (resid.lcnv[0]<0?0:resid.lcnv[0]); r = (resid.lcnv[2]>=getWidth(id)?getWidth(id)-1:resid.lcnv[2]);
-		t = (resid.lcnv[1]<0?0:resid.lcnv[1]); d = (resid.lcnv[3]>=getHeight(id)?getHeight(id)-1:resid.lcnv[3]);
+		borderCheck(resid,&l,&t,&r,&d);
 	}
 	for (int i=l; i<=r; i++)
 		for (int j=t; j<=d; j++)
@@ -101,14 +103,13 @@ void FindTransparencyBorder(Layer& id, Layer& resid, unsigned int msc, int overd
 				if (j+1<getHeight(id) && At(getColor(id,i,j+1))>127) transparency(resid,i,j,msc);
 			}
 		}
-	if (overdrive) optimize(resid);
+	if (overdrive) CalcBorder(resid);
 }
 
 void FixBorder(Layer& id, int msc)
 {
 	int l,r,t,d;
-	l = (id.lcnv[0]<0?0:id.lcnv[0]); r = (id.lcnv[2]>=getWidth(id)?getWidth(id)-1:id.lcnv[2]);
-	t = (id.lcnv[1]<0?0:id.lcnv[1]); d = (id.lcnv[3]>=getHeight(id)?getHeight(id)-1:id.lcnv[3]);
+	borderCheck(id,&l,&t,&r,&d);
 	for (int i=l+1; i<r; i++)
 		for (int j=t+1; j<d; j++)
 		{
@@ -170,8 +171,7 @@ void _LTBProc(Layer& id,Layer& resid,int l_x, int l_y, int i, int length, int ms
 void LinearTransparencyBorder(Layer& id,Layer& resid, unsigned int msc, int l_x, int l_y, int length)
 {
 	int l,r,t,d,i;
-	l = (id.lcnv[0]<0?0:id.lcnv[0]); r = (id.lcnv[2]>=getWidth(id)?getWidth(id)-1:id.lcnv[2]);
-	t = (id.lcnv[1]<0?0:id.lcnv[1]); d = (id.lcnv[3]>=getHeight(id)?getHeight(id)-1:id.lcnv[3]);
+	borderCheck(id,&l,&t,&r,&d);
 
 	resid.lcnv[0] = l;
 	resid.lcnv[1] = t;
@@ -187,8 +187,7 @@ void LinearTransparencyBorder(Layer& id,Layer& resid, unsigned int msc, int l_x,
 void Smooth(Layer& id, int v,unsigned int msc)
 {
 	int l,r,t,d;
-	l = (id.lcnv[0]<0?0:id.lcnv[0]); r = (id.lcnv[2]>=getWidth(id)?getWidth(id)-1:id.lcnv[2]);
-	t = (id.lcnv[1]<0?0:id.lcnv[1]); d = (id.lcnv[3]>=getHeight(id)?getHeight(id)-1:id.lcnv[3]);
+	borderCheck(id,&l,&t,&r,&d);
 	v++;
 	for (int i=v; i>1; i--)
 	{
@@ -241,16 +240,14 @@ void Smooth(Layer& id, int v,unsigned int msc)
 void Overlay (Layer& id, unsigned int color)
 {
 	int l,r,t,d;
-	l = (id.lcnv[0]<0?0:id.lcnv[0]); r = (id.lcnv[2]>=getWidth(id)?getWidth(id):id.lcnv[2]);
-	t = (id.lcnv[1]<0?0:id.lcnv[1]); d = (id.lcnv[3]>=getHeight(id)?getHeight(id):id.lcnv[3]);
-	DrawRect(id,color,l,t,r-l,d-t,1);
+	borderCheck(id,&l,&t,&r,&d);
+	DrawRect(id,color,l,t,r-l+1,d-t+1,1);
 }
 
 void Fill (Layer& id, unsigned int msc, int x, int y)
 {
 	int l,r,t,d;
-	l = (id.lcnv[0]<0?0:id.lcnv[0]); r = (id.lcnv[2]+1>=getWidth(id)?getWidth(id)-1:id.lcnv[2]);
-	t = (id.lcnv[1]<0?0:id.lcnv[1]); d = (id.lcnv[3]+1>=getHeight(id)?getHeight(id)-1:id.lcnv[3]);
+	borderCheck(id,&l,&t,&r,&d);
 	unsigned int cvr = At(getColor(id,x,y));
 	if (msc == cvr) return;
 	transparency(id,x,y,msc);
@@ -284,22 +281,31 @@ void CircularShine(Layer& id, unsigned int msc, int x, int y, int r, int dr, int
 		}
 }
 
-void NOT(Layer& id, Layer& op)
+void ANDNOT(Layer& id, Layer& op, Layer& result)
 {
+	cloneLayer(id,result);
 	int l,r,t,d;
-	l = (id.lcnv[0]<op.lcnv[0]?op.lcnv[0]:id.lcnv[0]); r = (id.lcnv[2]>op.lcnv[2]?op.lcnv[2]:id.lcnv[2]);
-	t = (id.lcnv[1]<op.lcnv[1]?op.lcnv[1]:id.lcnv[1]); d = (id.lcnv[3]>op.lcnv[3]?op.lcnv[3]:id.lcnv[3]);
-	for (int i=l; i<r; i++)
-		for (int j=t; j<d; j++)
-			if (At(getColor(op,i,j))>127) transparency(id,i,j,0);
+	borderCheck(id,&l,&t,&r,&d);
+	for (int i=l; i<=r; i++)
+		for (int j=t; j<=d; j++)
+			if (At(getColor(op,i,j))>127) transparency(result,i,j,0);
 }
 
-void AND(Layer& id, Layer& op)
+void AND(Layer& id, Layer& op, Layer& result)
 {
+	cloneLayer(id,result);
 	int l,r,t,d;
-	l = (id.lcnv[0]<op.lcnv[0]?op.lcnv[0]:id.lcnv[0]); r = (id.lcnv[2]>op.lcnv[2]?op.lcnv[2]:id.lcnv[2]);
-	t = (id.lcnv[1]<op.lcnv[1]?op.lcnv[1]:id.lcnv[1]); d = (id.lcnv[3]>op.lcnv[3]?op.lcnv[3]:id.lcnv[3]);
-	for (int i=l; i<r; i++)
-		for (int j=t; j<d; j++)
-			if (At(getColor(op,i,j))<127) transparency(id,i,j,0);
+	borderCheck(id,&l,&t,&r,&d);
+	for (int i=l; i<=r; i++)
+		for (int j=t; j<=d; j++)
+			if (At(getColor(op,i,j))<127) transparency(result,i,j,0);
+}
+void NOT(Layer& id, Layer& result)
+{
+	cloneLayer(id,result);
+	int l,r,t,d;
+	borderCheck(id,&l,&t,&r,&d);
+	for (int i=l; i<=r; i++)
+		for (int j=t; j<=d; j++)
+			transparency(id,i,j,255-At(getColor(result,i,j)));
 }

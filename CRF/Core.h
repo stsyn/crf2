@@ -168,6 +168,14 @@ inline void MSDrawC(Layer& id, int x, int y, int a, int r, int g, int b, int mod
 	else MSDraw(id,x,y,a,r,g,b,mode);
 }
 
+inline void borderCheck(Layer& id, int *l, int *t, int *r, int *d)
+{
+	*l = id.lcnv[0]<0?0:id.lcnv[0];
+	*t = id.lcnv[1]<0?0:id.lcnv[1];
+	*r = id.lcnv[2]>=getWidth(id)?getWidth(id)-1:id.lcnv[2];
+	*d = id.lcnv[3]>=getHeight(id)?getHeight(id)-1:id.lcnv[3];
+}
+
 	void l_init(char *tx);
 	void l_close();
 	void l_resize(int xs, int ys);

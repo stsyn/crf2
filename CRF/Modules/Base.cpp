@@ -124,8 +124,8 @@ void StackedRender(int count, ...)
 	va_list ap;
 	va_start(ap,count);
 	Layer context;
-	cloneLayer(*_cnv[va_arg(ap,int)],context);
-	for (int i=1; i<count; i++) IncludeLayer(*_cnv[va_arg(ap,int)],context,0,0);
+	buildLayer(context,xmax,ymax);
+	for (int i=0; i<count; i++) IncludeLayer(*_cnv[va_arg(ap,int)],context,0,0);
 	va_end(ap);
 	renderer(context);
 }

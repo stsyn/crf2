@@ -13,7 +13,7 @@ void SolarShine(Layer& id, int sx, int sy, int zoom)
 	//getting length
 	int dx = sx-getWidth(id)/2,
 		dy = sy-getHeight(id)/2;
-	int ln = sqrt(abs(dx)*2*abs(dy));
+	int ln = sqrt(dx*dx+dy*dy);
 	if (ln<40*zoom/128) return;
 
 	//central point

@@ -1,7 +1,7 @@
 #include "../Core.h"
 #include "../Layer.h"
 
-void TransformLayer(Layer& id, Layer& tid, int tx, int ty, int x2, int y2, int xk, int yk, int mode)
+void TransformLayer(Layer& id, Layer& tid, int tx, int ty, int x2, int y2, int xk, int yk, int mode, int drawmode)
 {
 	unsigned int a,r,g,b;
 	int i,j,mx,my,nx,ny,tdx, tdy, ax, ay;
@@ -43,17 +43,13 @@ void TransformLayer(Layer& id, Layer& tid, int tx, int ty, int x2, int y2, int x
 			else tdx=bx + i;
 			if ((mode & 4) == 4) ARGBt(getColor(id,tdy,tdx),&a,&r,&g,&b);
 			else ARGBt(getColor(id,tdx,tdy),&a,&r,&g,&b);
-			if (a == 0) continue;
-			if (a != 255) 
-			{
-				plot(tid,tx+i,ty+j,a,r,g,b);
-			}
-			else
-			{
-				if ((mode & 4) == 4) plot(tid,tx+i,ty+j,getColor(id,tdy,tdx));
-				else plot(tid,tx+i,ty+j,getColor(id,tdx,tdy));
-			}
+			MSDrawC(tid,tx+i,ty+j,a,r,g,b,drawmode);
 		}
+}
+
+void TransformLayer(Layer& id, Layer& tid, int tx, int ty, int x2, int y2, int xk, int yk, int mode)
+{
+	TransformLayer(id, tid, tx, ty, x2, y2, xk, yk, mode, id.mode);
 }
 
 void MoveLayer(Layer& id, int xa, int ya)

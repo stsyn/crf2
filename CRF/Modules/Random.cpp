@@ -18,6 +18,17 @@ void BWNoise(Layer& id, int x1, int y1, int xk, int yk)
 		}
 }
 
+void BWNoise(Layer& id, int x1, int y1, int xk, int yk, int m, int v)
+{
+	int i,j,t;
+	for (i = 0; i<xk; i++)
+		for (j = 0; j<yk; j++)
+		{	
+			t = gener(v)+m;
+			plot(id,x1+i,y1+j,t,t,t);
+		}
+}
+
 void ANoise(Layer& id, int x1, int y1, int xk, int yk)
 {
 	int i,j,t;

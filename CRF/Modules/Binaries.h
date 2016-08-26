@@ -2,6 +2,7 @@
 #define BINAR_MAIN_H_INCLUDED
 	#include "../Layer.h"
 
+	void CalcBorder(Layer& id);
 	void FindTransparencyBorder(Layer& id, Layer& resid,unsigned int msc, int overdrive);
 	void Overlay(Layer& id, unsigned int color);
 	void Smooth(Layer& id, int v,unsigned int msc);
@@ -14,7 +15,8 @@
 	void RadialShine(Layer& id, unsigned int msc, int x, int y, int r, int action);
 	void CircularShine(Layer& id, unsigned int msc, int x, int y, int r, int ar, int action);
 
-	void NOT(Layer& id, Layer& op);
-	void AND(Layer& id, Layer& op);
+	void ANDNOT(Layer& id, Layer& op, Layer& result);
+	void AND(Layer& id, Layer& op, Layer& result);
+	void NOT(Layer& id, Layer& result);
 
 #endif

@@ -43,21 +43,7 @@ void ZoomRender(Layer& id, Layer& tid, int tx, int ty, int x1, int y1, int cx, i
 			xt = (float)x2/x1;
 			yt = (float)y2/y1;
 			ARGBt(getColor(id,cx + (int)(i*xt),cy + (int)(j*yt)),&a,&r,&g,&b);
-			if (a == 0) continue;
-			if (a != 255) 
-			{
-				if (mode == 0) plot(tid,tx+i,ty+j,a,r,g,b);
-				else if (mode == 1) add(tid,tx+i,ty+j,a,r,g,b);
-				else if (mode == 2) mult(tid,tx+i,ty+j,a,r,g,b);
-				else if (mode == 5) rem(tid,tx+i,ty+j,a,r,g,b);
-			}
-			else
-			{
-				if (mode == 0) plot(tid,tx+i,ty+j,getColor(id,cx + (int)(i*xt),cy + (int)(j*yt)));
-				else if (mode == 1) add(tid,tx+i,ty+j,r,g,b);
-				else if (mode == 2) mult(tid,tx+i,ty+j,r,g,b);
-				else if (mode == 5) rem(tid,tx+i,ty+j,r,g,b);
-			}
+			MSDrawC(tid,tx+i,ty+j,a,r,g,b,mode);
 		}
 
 }

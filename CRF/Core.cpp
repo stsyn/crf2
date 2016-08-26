@@ -276,12 +276,14 @@ void plot(Layer& id,int x,int y, int a, int r,int g,int b)
 	unsigned int dr,dg,db,da;
 	ARGBt(id.cnv[x][y],&da,&dr,&dg,&db);
 	
-	dr=( (dr * (255 - a) ) + (r * a)) >> 8;
-	dg=( (dg * (255 - a) ) + (g * a)) >> 8;
-	db=( (db * (255 - a) ) + (b * a)) >> 8;
-	da+=a;
+	da=a+da;
 	if (da>255) da=255;
+
+	dr=( (dr * (255-a)) + (r * a)) /da;
+	dg=( (dg * (255-a)) + (g * a)) /da;
+	db=( (db * (255-a)) + (b * a)) /da;
 	
+
 	id.cnv[x][y]= ARGB(da,dr,dg,db);
 }	
 	

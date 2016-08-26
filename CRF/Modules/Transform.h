@@ -7,12 +7,19 @@
 
 
 	void TransformLayer(Layer& id, Layer& tid, int tx, int ty, int x2, int y2, int xk, int yk, int mode);
+	void TransformLayer(Layer& id, Layer& tid, int tx, int ty, int x2, int y2, int xk, int yk, int mode, int drawmode);
 	void MoveLayer(Layer& id, int xa, int ya);
 
 
 inline void TransformLayer(Layer& id, Layer& tid, int tx, int ty, int mode)
 {
-	TransformLayer(id,tid,tx,ty,0,0,getWidth(id),getHeight(id),mode);
+	TransformLayer(id,tid,tx,ty,0,0,getWidth(id),getHeight(id),mode,id.mode);
+	return;
+}
+
+inline void TransformLayer(Layer& id, Layer& tid, int tx, int ty, int mode, int drawmode)
+{
+	TransformLayer(id,tid,tx,ty,0,0,getWidth(id),getHeight(id),mode,drawmode);
 	return;
 }
 
